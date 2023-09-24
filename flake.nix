@@ -1,4 +1,6 @@
 {
+  description = "A minimal thermostat controller for RP2040.";
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
@@ -11,7 +13,7 @@
       let
         pkgs = import nixpkgs { inherit system; overlays = [ (import rust-overlay) ]; };
         target = "thumbv6m-none-eabi";
-        rust = pkgs.rust-bin.nightly."2023-06-01".default.override {
+        rust = pkgs.rust-bin.nightly.latest.default.override {
           extensions = [ "rust-src" "rustfmt" "rust-analyzer" ];
           targets = [ target ];
         };
@@ -19,7 +21,8 @@
         embassy = pkgs.fetchFromGitHub {
           owner = "embassy-rs";
           repo = "embassy";
-          rev = "f26dd54f6378be87a71f0c9f351b56851df96014";
+          # use same git revision for this source as embassy Cargo dependency
+          rev = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).dependencies.embassy-rp.rev;
           sha256 = "sha256-FSkMIRIrAko3sprGBsZ6Inh0xHUWULtPlEIOVafB4YY=";
         };
         naersk' = pkgs.callPackage naersk { rustc = rust; cargo = rust; };

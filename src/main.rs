@@ -180,7 +180,7 @@ async fn temp_reader<T: I2c>(mut dev: Thermometer<T>) {
 }
 
 // Separate a two digit number into each digit,
-// any number > 99 returns (9, 9).
+// any input >= 99 returns (9, 9).
 fn digits(mut n: u8) -> (u8, u8) {
     if n > 99 {
         n = 99

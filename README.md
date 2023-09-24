@@ -1,4 +1,4 @@
-# therm
+# picotherm
 
 > Work in progress.
 
@@ -13,7 +13,6 @@ thermostat built with $30 in components.
 - <= $30 in components.
 - No separate wireless relay for local network connectivity.
 - Apple Home + Google Home compatible.
-- No SMD soldering.
 
 ## TODO
 
@@ -29,10 +28,7 @@ thermostat built with $30 in components.
 | [6136306](https://www.digikey.com/en/products/detail/bosch-sensortec/BME280/6136306)                    | Thermometer             | 6.42     | 1        |
 |                                                                                                         | Electromechanical relay | 6.18     | 2        |
 | [408212](https://www.digikey.com/en/products/detail/liteon/LTD-4708JR/408212)                           | 2 digit display         | 2.09     | 2        |
-| [15970925](https://www.digikey.com/en/products/detail/digi-key-electronics/DKS-SOLDERBREAD-02/15970925) | Solderboard             | 2.22     | 1        |
 | order from [pcbway.com](https://pcbway.com)                                                             | PCB                     | _        | 1        |
-
-**Total**: $29.09
 
 ## Schematic
 
