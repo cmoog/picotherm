@@ -1,0 +1,20 @@
+name: build
+on:
+  push:
+jobs:
+  package:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: DeterminateSystems/nix-installer-action@v4
+        with:
+          diagnostic-endpoint: ""
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+        with:
+          diagnostic-endpoint: ""
+      - run: nix build
+      - name: Upload vsix as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: therm.uf2
+          path: result/bin/therm.uf2

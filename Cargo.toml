@@ -1,0 +1,32 @@
+[package]
+name = "therm"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cyw43 = { git = "https://github.com/embassy-rs/embassy", rev="f26dd54f6378be87a71f0c9f351b56851df96014", package = "cyw43", features = ["defmt", "firmware-logs"] }
+cyw43-pio = { git = "https://github.com/embassy-rs/embassy", rev="f26dd54f6378be87a71f0c9f351b56851df96014", package = "cyw43-pio", features = ["defmt", "overclock"] }
+embassy-embedded-hal = { git = "https://github.com/embassy-rs/embassy", rev="f26dd54f6378be87a71f0c9f351b56851df96014", package = "embassy-embedded-hal", features = ["defmt"] } 
+embassy-rp = { git = "https://github.com/embassy-rs/embassy", rev="f26dd54f6378be87a71f0c9f351b56851df96014", package = "embassy-rp", features = ["defmt", "unstable-traits", "nightly", "unstable-pac", "time-driver", "critical-section-impl"] } 
+embassy-usb = { git = "https://github.com/embassy-rs/embassy", rev="f26dd54f6378be87a71f0c9f351b56851df96014", package = "embassy-usb", features = ["defmt"] }
+embedded-io-async = { version = "0.5.0", features = ["defmt-03"] }
+
+embassy-executor = { package = "embassy-executor", git = "https://github.com/embassy-rs/embassy", rev="f26dd54f6378be87a71f0c9f351b56851df96014", features = ["nightly", "arch-cortex-m", "executor-thread", "executor-interrupt", "defmt", "integrated-timers"] }
+embassy-net = { package = "embassy-net", git = "https://github.com/embassy-rs/embassy", rev="f26dd54f6378be87a71f0c9f351b56851df96014", features = ["defmt", "nightly", "tcp", "udp", "dhcpv4", "medium-ethernet", "proto-ipv6"] }
+embassy-time = { package = "embassy-time", git = "https://github.com/embassy-rs/embassy", rev="f26dd54f6378be87a71f0c9f351b56851df96014", features = ["nightly", "unstable-traits", "defmt", "defmt-timestamp-uptime"] }
+embassy-sync = { package = "embassy-sync", git = "https://github.com/embassy-rs/embassy", rev="f26dd54f6378be87a71f0c9f351b56851df96014" }
+embedded-hal = { version = "1.0.0-rc.1" }
+bme280 = { git = "https://github.com/cmoog/bme280-rs", rev = "b836384e6632a4f617e88603a4b9a67c376d849e"}
+
+cortex-m-rt = "0.7.0"
+defmt = "0.3"
+defmt-rtt = "0.4"
+panic-probe = { version = "0.3", features = ["print-defmt"] }
+static_cell = { version = "1.2.0", features = ["nightly"] }
+httparse = { version = "1.8.0", features = [], default-features = false }
+picoserve = { git = "https://github.com/sammhicks/picoserve", rev = "03da530c5b3407ec37573bb725c94176f68370d0" }
+rand = { version = "0.8.5", default-features = false }
+
+embassy-futures = { git = "https://github.com/embassy-rs/embassy", rev = "f26dd54f6378be87a71f0c9f351b56851df96014" }
+embassy-usb-logger = { git = "https://github.com/embassy-rs/embassy", rev = "f26dd54f6378be87a71f0c9f351b56851df96014" }
+embedded-io = "0.5.0"
