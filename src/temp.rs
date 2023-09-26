@@ -9,7 +9,7 @@ pub struct Thermometer<T: I2c> {
 
 pub struct Measurement {
     /// temperature in degrees celsius
-    pub temperature: f32,
+    pub temperature: Temperature,
     /// pressure in pascals
     pub pressure: f32,
     /// percent relative humidity
@@ -30,9 +30,29 @@ impl<T: I2c> Thermometer<T> {
     pub fn measure(&mut self) -> Result<Measurement, ()> {
         let resp = self.device.measure(&mut self.delay).map_err(|_| ())?;
         Ok(Measurement {
-            temperature: resp.temperature,
+            temperature: Temperature::from_celsius(resp.temperature),
             humidity: resp.humidity,
             pressure: resp.pressure,
         })
+    }
+}
+
+pub struct Temperature(f32);
+
+#[allow(dead_code)]
+impl Temperature {
+    pub fn celsius(&self) -> f32 {
+        self.0
+    }
+    pub fn fahrenheit(&self) -> f32 {
+        (self.0 * 9.0 / 5.0) + 32.0
+    }
+
+    pub fn from_fahrenheit(temp: f32) -> Self {
+        Self((temp - 32.0) * 5.0 / 9.0)
+    }
+
+    pub fn from_celsius(temp: f32) -> Self {
+        Self(temp)
     }
 }

@@ -174,7 +174,7 @@ async fn temp_reader<T: I2c>(mut dev: Thermometer<T>) {
     loop {
         let resp = dev.measure().unwrap();
         info!("measured the temperature = {} deg C", resp.temperature);
-        THERMOMTER_READING.store(resp.temperature as i32, Ordering::Relaxed);
+        THERMOMTER_READING.store(resp.temperature.fahrenheit() as i32, Ordering::Relaxed);
         Timer::after(Duration::from_secs(5)).await;
     }
 }
@@ -198,6 +198,8 @@ enum ControlMode {
     Auto,
     Cool,
     Heat,
+    #[allow(dead_code)]
+    Off,
 }
 
 #[derive(PartialEq, Copy, Debug, Clone)]
