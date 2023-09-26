@@ -44,7 +44,7 @@ async fn main(spawner: Spawner) {
         p.PIN_2, p.PIN_3, p.PIN_4, p.PIN_5, p.PIN_6, p.PIN_7, p.PIN_8, p.PIN_9, p.PIN_10,
     )));
     unwrap!(spawner.spawn(temp_task(p.I2C0, p.PIN_0, p.PIN_1)));
-    unwrap!(spawner.spawn(control_task(p.PIN_15, p.PIN_16)));
+    unwrap!(spawner.spawn(control_task(p.PIN_15, p.PIN_16, p.PIN_17)));
 
     blink(control).await;
 }
@@ -109,11 +109,12 @@ async fn wifi_task(
 
 // primary bang-bang control loop for maintaining target temp
 #[embassy_executor::task]
-async fn control_task(pin_ac: PIN_15, pin_heat: PIN_16) {
+async fn control_task(pin_ac: PIN_15, pin_heat: PIN_16, pin_fan: PIN_17) {
     use relays::Relay;
     let ac = Relay::new(Output::new(pin_ac, Level::Low));
     let heater = Relay::new(Output::new(pin_heat, Level::Low));
-    run_control_loop(ac, heater).await;
+    let fan = Relay::new(Output::new(pin_fan, Level::Low));
+    run_control_loop(ac, heater, fan).await;
 }
 
 // a background task for measuring the temp of the room and updating the global state
@@ -196,8 +197,11 @@ enum ControlMode {
     /// Use both the AC and heater to bring the measured temperature within
     /// range of the target temperature.
     Auto,
+    /// Only use the AC to bring the temperature down to the target value.
     Cool,
+    /// Only use the heater to bring the temperature up to the target value.
     Heat,
+    /// Disable AC and heater.
     #[allow(dead_code)]
     Off,
 }
@@ -207,6 +211,13 @@ enum ControlState {
     Heating,
     Cooling,
     Nothing,
+}
+
+#[derive(PartialEq, Copy, Debug, Clone)]
+enum FanMode {
+    #[allow(dead_code)]
+    On,
+    Off,
 }
 
 fn new_state(current_temp: i32, target_temp: i32, mode: ControlMode) -> ControlState {
@@ -222,13 +233,18 @@ fn new_state(current_temp: i32, target_temp: i32, mode: ControlMode) -> ControlS
     }
 }
 
-async fn run_control_loop<AC, HE>(mut ac: Relay<AC>, mut heater: Relay<HE>)
-where
+async fn run_control_loop<AC, HE, FAN>(
+    mut ac: Relay<AC>,
+    mut heater: Relay<HE>,
+    mut fan: Relay<FAN>,
+) where
     AC: OutputPin,
     HE: OutputPin,
+    FAN: OutputPin,
 {
     // hard coded for now, should be runtime configurable by Matter API
     let mode = ControlMode::Auto;
+    let fan_state = FanMode::Off;
 
     loop {
         let current_temp = THERMOMTER_READING.load(Ordering::Relaxed);
@@ -246,6 +262,14 @@ where
             ControlState::Nothing => {
                 ac.disconnect();
                 heater.disconnect();
+            }
+        };
+        match fan_state {
+            FanMode::On => {
+                fan.connect();
+            }
+            FanMode::Off => {
+                fan.disconnect();
             }
         };
         Timer::after(Duration::from_secs(2)).await;

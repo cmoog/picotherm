@@ -16,7 +16,6 @@ thermostat built with $30 in components.
 
 ## TODO
 
-- [ ] Support fan wire.
 - [ ] Commit schematic and PCB layout files.
 - [ ] Matter IP protocol compatibility.
 
@@ -28,6 +27,7 @@ thermostat built with $30 in components.
 | [6136306](https://www.digikey.com/en/products/detail/bosch-sensortec/BME280/6136306)                    | Thermometer             | 6.42     | 1        |
 |                                                                                                         | Electromechanical relay | 6.18     | 2        |
 | [408212](https://www.digikey.com/en/products/detail/liteon/LTD-4708JR/408212)                           | 2 digit display         | 2.09     | 2        |
+| [1588755](https://www.digikey.com/en/products/detail/on-shore-technology-inc/OSTYK42105030/1588755)     | terminal block          | 1.58     | 1        |
 | order from [pcbway.com](https://pcbway.com)                                                             | PCB                     | _        | 1        |
 
 ## Schematic
