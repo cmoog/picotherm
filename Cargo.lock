@@ -134,9 +134,10 @@ checksum = "b4682ae6287fcf752ecaabbfcc7b6f9b72aa33933dc23a554d853aea8eea8635"
 [[package]]
 name = "bme280"
 version = "0.4.4"
-source = "git+https://github.com/cmoog/bme280-rs?rev=b836384e6632a4f617e88603a4b9a67c376d849e#b836384e6632a4f617e88603a4b9a67c376d849e"
+source = "git+https://github.com/cmoog/bme280-rs?rev=ca0bcc1aade4d21852c2735fad0c85795ba02958#ca0bcc1aade4d21852c2735fad0c85795ba02958"
 dependencies = [
  "embedded-hal 1.0.0-rc.1",
+ "embedded-hal-async",
  "maybe-async-cfg",
 ]
 
@@ -1599,6 +1600,7 @@ dependencies = [
  "embassy-usb",
  "embassy-usb-logger",
  "embedded-hal 1.0.0-rc.1",
+ "embedded-hal-async",
  "embedded-io",
  "embedded-io-async",
  "httparse",

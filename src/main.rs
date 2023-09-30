@@ -18,10 +18,8 @@ use embassy_rp::{
 };
 use embassy_time::{Duration, Timer};
 use embassy_usb::class::cdc_ncm::embassy_net::Device;
-use embedded_hal::{
-    digital::{OutputPin, PinState},
-    i2c::I2c,
-};
+use embedded_hal::digital::{OutputPin, PinState};
+use embedded_hal_async::i2c::I2c;
 use panic_probe as _;
 use relays::Relay;
 use static_cell::make_static;
@@ -125,7 +123,7 @@ async fn temp_task(i2c0: I2C0, sda: PIN_0, scl: PIN_1) {
         I2C0_IRQ => i2c::InterruptHandler<I2C0>;
     });
     let device = I2c::new_async(i2c0, scl, sda, I2c0Irqs, Default::default());
-    temp_reader(Thermometer::new(device)).await;
+    temp_reader(Thermometer::new(device).await).await;
 }
 
 #[embassy_executor::task]
@@ -173,7 +171,7 @@ async fn display_task(
 
 async fn temp_reader<T: I2c>(mut dev: Thermometer<T>) {
     loop {
-        let resp = dev.measure().unwrap();
+        let resp = dev.measure().await.unwrap();
         info!("measured the temperature = {} deg C", resp.temperature);
         THERMOMTER_READING.store(resp.temperature.fahrenheit() as i32, Ordering::Relaxed);
         Timer::after(Duration::from_secs(5)).await;

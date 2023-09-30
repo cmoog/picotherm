@@ -1,9 +1,9 @@
-use bme280::i2c::BME280;
+use bme280::i2c::AsyncBME280;
 use embassy_time::Delay;
-use embedded_hal::i2c::I2c;
+use embedded_hal_async::i2c::I2c;
 
 pub struct Thermometer<T: I2c> {
-    device: BME280<T>,
+    device: AsyncBME280<T>,
     delay: Delay,
 }
 
@@ -17,18 +17,18 @@ pub struct Measurement {
 }
 
 impl<T: I2c> Thermometer<T> {
-    pub fn new(bus: T) -> Self
+    pub async fn new(bus: T) -> Self
     where
         T: I2c,
     {
-        let mut device = BME280::new_primary(bus);
+        let mut device = AsyncBME280::new_primary(bus);
         let mut delay = Delay;
-        device.init(&mut delay).unwrap();
+        device.init(&mut delay).await.unwrap();
         Self { device, delay }
     }
 
-    pub fn measure(&mut self) -> Result<Measurement, ()> {
-        let resp = self.device.measure(&mut self.delay).map_err(|_| ())?;
+    pub async fn measure(&mut self) -> Result<Measurement, ()> {
+        let resp = self.device.measure(&mut self.delay).await.map_err(|_| ())?;
         Ok(Measurement {
             temperature: Temperature::from_celsius(resp.temperature),
             humidity: resp.humidity,
